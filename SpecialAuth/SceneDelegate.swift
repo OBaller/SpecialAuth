@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +17,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        let accessToken: String? = KeychainWrapper.standard.string(forKey: "accessToken")
+        window = UIWindow(windowScene: windowScene)
+        if accessToken != nil {
+            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let homepage = mainStoryboard.instantiateViewController(withIdentifier: "HomeViewController") as? HomeViewController
+            self.window?.rootViewController = homepage
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

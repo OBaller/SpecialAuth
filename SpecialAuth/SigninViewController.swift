@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 class SigninViewController: UIViewController {
     
@@ -32,7 +33,8 @@ class SigninViewController: UIViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
-
+    
+// MARK: - Actions
     @IBAction func signinButton(_ sender: UIButton) {
         let username = usernameField.text
         let password = passwordField.text
@@ -78,6 +80,10 @@ class SigninViewController: UIViewController {
                     print("Acess Token: \(String(describing: accessToken ))")
                     print("User Id: \(String(describing: userId!))")
                     
+                    let saveAccessToken: Bool = KeychainWrapper.standard.set(accessToken!, forKey: "accessToken")
+                    let saveUserId: Bool = KeychainWrapper.standard.set(userId!, forKey: "userId")
+                    print("access token saved result: \(saveAccessToken)")
+                    print("user Id saved result: \(saveUserId)")
                     if (accessToken?.isEmpty)! {
                         // display alert
                         self.displayMessage(userMessage: "Could not successfully perform this request. Please try again later.")
@@ -87,7 +93,7 @@ class SigninViewController: UIViewController {
                     DispatchQueue.main.async {
                         let homepage = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as? HomeViewController
                         let appDelegate = UIApplication.shared.delegate
-                        appDelegate?.window??.rootViewController = homepage 
+                        appDelegate?.window??.rootViewController = homepage
                     }
                     
                 } else {
